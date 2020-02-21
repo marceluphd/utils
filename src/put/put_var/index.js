@@ -19,7 +19,7 @@ const encoderList = files.reduce((encoders, filename) => {
 function isObject (value) {
   const type = typeof value
 
-  return value != null && (type === 'object' || type === 'function')
+  return value != null && type === 'object'
 }
 
 function isArray (value) {

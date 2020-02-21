@@ -44,6 +44,16 @@ describe('gd-com binary serializer', () => {
     })
   }
 
+  // exception if is not a listed type
+  it('should throw Invalid value: no matching encoder found', () => {
+    try {
+      const test = () => {}
+      GdCom.putVar(test)
+    } catch (e) {
+      expect(true)
+    }
+  })
+
   // signed int
   it('should encode/decode int 8', () => {
     const values = [-128, 127, 10, -10]
@@ -146,97 +156,5 @@ describe('gd-com binary serializer', () => {
       const decoded = GdCom.getDouble(encoded)
       expect(decoded.value).to.deep.closeTo(value, 0.00001)
     })
-  })
-
-  // gdBuffer Test
-
-  it('gdBuffer should encode/decode', () => {
-    const buffer = new GdCom.GdBuffer()
-
-    const values = ['test', 'test1', 'test2']
-
-    values.forEach((value) => {
-      buffer.putVar(value)
-      const test = buffer.getVar()
-      expect(test).to.be.equal(value)
-      expect(buffer.getBuffer().equals(Buffer.alloc(0))).to.be.equals(true)
-    })
-  })
-
-  it('gdBuffer should encode/decode with buffer length', () => {
-    const buffer = new GdCom.GdBuffer()
-
-    buffer.putVar('test')
-    buffer.putVar('test')
-    buffer.putVar('test')
-    buffer.putVar('test')
-    let test = buffer.getVar()
-    expect(test).to.be.equal('test')
-    test = buffer.getVar()
-    expect(test).to.be.equal('test')
-    test = buffer.getVar()
-    expect(test).to.be.equal('test')
-
-    expect(buffer.getBuffer().length).to.be.equals(12)
-  })
-
-  it('should encode/decode string and be empty', () => {
-    const buffer = new GdCom.GdBuffer(Buffer.alloc(0), true)
-
-    const values = ['test', 'test1', 'test2']
-
-    values.forEach((value) => {
-      buffer.putVar(value)
-      const test = buffer.getVar()
-      expect(test).to.be.equal(value)
-      expect(buffer.getBuffer()).to.be.deep.equals(Buffer.alloc(0))
-    })
-  })
-
-  it('should encode/decode integer and be empty', () => {
-    const buffer = new GdCom.GdBuffer(Buffer.alloc(0), true)
-
-    const values = [-100, 100, 500, 8520]
-
-    values.forEach((value) => {
-      buffer.putVar(value)
-      const test = buffer.getVar()
-      expect(test).to.be.equal(value)
-      expect(buffer.getBuffer()).to.be.deep.equals(Buffer.alloc(0))
-    })
-  })
-
-  it('should encode/decode float and be empty', () => {
-    const buffer = new GdCom.GdBuffer(Buffer.alloc(0))
-
-    const values = [1.5, -1.5, 500.5, 8520, 8520]
-
-    values.forEach((value) => {
-      buffer.putVar(value)
-      const test = buffer.getVar()
-      expect(test).to.be.equal(value)
-      expect(buffer.getBuffer()).to.be.deep.equals(Buffer.alloc(0))
-    })
-  })
-
-  it('should encode/decode and contains test4', () => {
-    const buffer = new GdCom.GdBuffer(Buffer.alloc(0))
-
-    buffer.putVar('test1')
-    buffer.putVar('test2')
-    buffer.putVar('test3')
-    buffer.putVar('test4')
-
-    let test = buffer.getVar()
-    expect(test).to.be.equal('test1')
-    expect(buffer.getBuffer().length).to.be.equals(48)
-
-    test = buffer.getVar()
-    expect(test).to.be.equal('test2')
-    expect(buffer.getBuffer().length).to.be.equals(32)
-
-    test = buffer.getVar()
-    expect(test).to.be.equal('test3')
-    expect(buffer.getBuffer().length).to.be.equals(16)
   })
 })
